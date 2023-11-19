@@ -1,127 +1,146 @@
-public class LL {
+class LL {
+  private class Node {
+    int data;
+    Node next;
 
-    public static void main(String[] args) {
-        LL list = new LL();
-        list.insertFirst(10);
-        list.insertFirst(8);
-        list.insertFirst(6);
-        list.insertFirst(4);
-        list.insertFirst(2);
-        list.insertlast(12);
-        list.display();
-        list.deleteIndex(2);
-        list.display();
+    Node(int data) {
+      this.data = data;
+      this.next = null;
+    }
+  }
+
+  private Node head;
+  private Node tail;
+  private int size;
+
+  public LL() {
+    head = null;
+    tail = null;
+    size = 0;
+  }
+
+  public void insertFirst(int data) {
+    Node node = new Node(data);
+    node.next = head;
+    head = node;
+
+    if (tail == null) {
+      tail = head;
     }
 
-    private Node head;
-    private Node tail;
-    private int size;
+    size++;
+  }
 
-    public LL() {
-        this.size = 0;
+  public void insertLast(int data) {
+    if (tail==null) {
+      insertFirst(data);
+      return;
     }
+    Node node = new Node(data);
+    tail.next = node;
+    tail = node;
+    size++;
+  }
 
-    public void insertFirst(int val) {
-        Node node = new Node(val);
-        node.next = head;
-        head = node;
-        if (tail==null) {
-            tail = head;
+  public void insertAtIndex(int index, int data) {
+      if (index < 0 || index > size) {
+          System.out.println("Invalid index");
+          return;
+      }
+      if (index == 0) {
+          insertFirst(data);
+          }
+      else if (index == size) {
+        insertLast(data);
+      } else {
+          Node node = new Node(data);
+          Node temp = head;
+          for (int i = 0; i < index - 1; i++) {
+              temp = temp.next;
+          }
+          node.next = temp.next;
+          temp.next = node;
+      }
+      size++;
+  }
+
+  public void deleteFirst() {
+        if (head != null) {
+           head = head.next;
         }
-        size+=1;
-    }
+  }
 
-    public void insertlast(int val) {
-        if (tail == null) {
-            insertFirst(val);
+  public void deleteLast() {
+        if (head == null || head.next == null) {
+            
+            head = null;
+        } else {
+            Node temp = head;
+            while (temp.next.next != null) {
+                temp = temp.next;
+            }
+            temp.next = null;
+        }
+  }
+
+public void deleteAtIndex(int index) {
+        if (index < 0 || head == null) {
             return;
         }
-        Node node = new Node(val);
-        tail.next = node;
-        tail = node;
-        size++;
-    }
 
-    public void insertIndex(int val, int index) {
         if (index == 0) {
-            insertFirst(val);
+          head = head.next;
             return;
         }
-        if (index == size) {
-            insertlast(val);
-            return;
-        }
+
         Node temp = head;
-        for (int i=1; i<index; i++) {
+        int currentIndex = 0;
+
+        while (temp != null && currentIndex < index - 1) {
             temp = temp.next;
+            currentIndex++;
         }
-        Node node = new Node(val, temp.next);
-        temp.next = node;
-        size++;
+        if (temp == null || temp.next == null) {
+            return;
+        }
+        temp.next = temp.next.next;
+}
+
+    public boolean search(int value) {
+        Node current = head;
+
+        while (current != null) {
+            if (current.data == value) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
     }
-
-    public int deleteFirst() {
-        int val = head.value;
-        head = head.next;
-        if (head == tail) {
-            tail = null;
-        }
-        size--;
-        return val;
+  
+  public void display() {
+    Node temp = head;
+    while (temp != null) {
+      System.out.print(temp.data + "->");
+      temp = temp.next;
     }
+    System.out.println("End");
+  }
 
-    public Node get(int index) {
-        Node node = head;
-        for (int i=0; i<index; i+=1) {
-            node = node.next;
-        }
-        return node;
-    }
-
-    public int deleteLast() {
-        if (size<=1) {
-            return deleteFirst();
-        }
-        Node secondLast = get(size-2);
-        int val = tail.value;
-        tail = secondLast;
-        tail.next = null;
-        return val;
-    }
-
-    public int deleteIndex(int index) {
-        if (index==0) {
-            return deleteFirst();
-        }
-        if (index==size-1) {
-            return deleteLast();
-        }
-        Node prev = get(index-1);
-        int val = prev.next.value;
-        prev.next = prev.next.next;
-        return val;
-    }  
-
-    public void display() {
-        Node temp = head;
-        while (temp!=null) {
-            System.out.print(temp.value+"->");
-            temp=temp.next;
-        }
-        System.out.println("END");
-    }
-
-    private class Node {
-        private int value;
-        private Node next;
-
-        public Node(int value) {
-            this.value = value;
-        }
-
-        public Node(int value, Node next) {
-            this.value = value;
-            this.next = next;
-        }
-    }
+  
+  public static void main(String[] args) {
+    LL list = new LL();
+    list.insertFirst(3);
+    list.insertFirst(4);
+    list.insertFirst(5);
+    list.display();
+    list.insertLast(2);
+    list.insertLast(1);
+    list.display();
+    list.insertAtIndex(2,6);
+    list.insertAtIndex(3,2);
+    list.display();
+    list.deleteFirst();
+    list.display();
+  }
 }
